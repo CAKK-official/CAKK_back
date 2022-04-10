@@ -6,7 +6,7 @@ declare const module: any; // Hot Reloading Setting
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT || 8000;
-  await app.listen(3000);
+  await app.listen(8000);
   console.log(`Listening on http://localhost:${port}`);
 
   if (module.hot) {
