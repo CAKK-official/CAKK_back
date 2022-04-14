@@ -1,7 +1,5 @@
-import { IsArray, IsNumber, IsString, IsUrl } from 'class-validator';
-import { url } from 'inspector';
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Url } from 'url';
+import { IsArray, IsNumber, IsString } from 'class-validator';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class cakeStore {
@@ -9,45 +7,63 @@ export class cakeStore {
   @IsNumber()
   id: number;
 
+  @Column()
   @IsString()
   name: string;
 
+  @Column()
   @IsString()
   address: string;
 
+  @Column()
   @IsNumber()
   tel: number;
 
+  @Column()
   @IsString()
   notice: string;
 
+  @Column()
   @IsNumber()
   views: number;
 
-  @IsUrl()
-  url: Url;
+  @Column()
+  @IsString()
+  url: string;
 
+  @Column()
   @IsString()
   menu: string;
 
+  @Column()
   @IsString()
   precautin: string;
 
+  @Column()
   @IsString()
   others: string;
 
+  @Column()
   @IsString()
   opend: string;
 
+  @Column()
   @IsString()
   closed: string;
 
+  @Column()
   @IsArray()
   tag: string[];
+
+  @Column()
   @IsArray()
-  picture: Url[];
+  picture: string[];
+
+  @Column()
   @IsArray()
   latlng: number[];
+
+  @Column()
   @IsArray()
   category: string[];
 }
