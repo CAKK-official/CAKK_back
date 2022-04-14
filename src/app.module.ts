@@ -12,8 +12,8 @@ import { cakeStore } from './cake-store/entities/cakestore.entity';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'ab3670',
-      database: 'cakestore',
+      password: 'eulieta13!',
+      database: 'cakk',
       entities: [cakeStore],
       synchronize: true, // false가 안전함
     }),
