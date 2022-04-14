@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CakeStoreModule } from './cake-store/cake-store.module';
 import { Connection } from 'typeorm';
-import { cakeStore } from './cake-store/entities/cakestore.entity';
+import { CakkDummy } from './cake-store/entities/CakkDummy.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -14,8 +14,8 @@ import { cakeStore } from './cake-store/entities/cakestore.entity';
       username: 'root',
       password: 'ab3670',
       database: 'cakestore',
-      entities: [cakeStore],
-      synchronize: true, // false가 안전함
+      entities: [CakkDummy],
+      synchronize: false, // false가 안전함
     }),
     CakeStoreModule,
   ],
