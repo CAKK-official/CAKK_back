@@ -1,15 +1,17 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { CakeStore } from 'src/cake-store/entities/CakkDummy.entity';
+import { PictblDummy } from 'src/cake-store/entities/PictblDummy';
+import { StoretblDummy } from 'src/cake-store/entities/StoretblDummy';
 
 const config: TypeOrmModuleOptions = {
   type: 'mysql',
   host: 'localhost',
   port: 3306,
   username: 'root',
-  password: '비밀번호입력',
+  password: 'ab3670',
   database: 'cakk',
-  entities: [CakeStore],
+  entities: [StoretblDummy, PictblDummy],
   synchronize: false,
+  keepConnectionAlive: true,
 };
 
 export = config;

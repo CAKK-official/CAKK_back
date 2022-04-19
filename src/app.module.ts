@@ -4,7 +4,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CakeStoreModule } from './cake-store/cake-store.module';
 import { Connection } from 'typeorm';
-import { CakeStore } from './cake-store/entities/CakkDummy.entity';
 import config from '../ormconfig';
 
 @Module({
