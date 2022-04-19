@@ -1,7 +1,8 @@
 import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
-
+import { ApiProperty } from '@nestjs/swagger';
 @Entity('cakk_dummy', { schema: 'cakestore' })
 export class CakkDummy {
+  @ApiProperty()
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number | null;
 
