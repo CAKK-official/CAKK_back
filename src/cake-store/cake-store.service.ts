@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { cakeStore } from './entities/cakestore.entity';
+import { CakkDummy } from './entities/CakkDummy.entity';
 
 @Injectable()
 export class CakeStoreService {
   constructor(
-    @InjectRepository(cakeStore)
-    private readonly repository: Repository<cakeStore>,
+    @InjectRepository(CakkDummy)
+    private readonly repository: Repository<CakkDummy>,
   ) {}
 
-  findAll(): Promise<cakeStore[]> {
+  findAll(): Promise<CakkDummy[]> {
     return this.repository.find();
   }
 }
