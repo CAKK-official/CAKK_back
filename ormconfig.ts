@@ -5,9 +5,9 @@ const config: TypeOrmModuleOptions = {
   type: 'mysql',
   host: 'localhost',
   port: 3306,
-  username: 'root',
-  password: '비밀번호입력',
-  database: 'cakk',
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
   entities: [CakeStore],
   synchronize: false,
 };
