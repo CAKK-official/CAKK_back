@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CakeStoreModule } from './cake-store/cake-store.module';
@@ -8,7 +9,7 @@ import { CakeStore } from './cake-store/entities/CakkDummy.entity';
 import config from '../ormconfig';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config), CakeStoreModule],
+  imports: [ConfigModule.forRoot( {isGlobal: true} ), TypeOrmModule.forRoot(config), CakeStoreModule],
   controllers: [AppController],
   providers: [AppService],
 })
