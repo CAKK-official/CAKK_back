@@ -6,7 +6,9 @@ import { ValidationPipe } from '@nestjs/common';
 declare const module: any; // Hot Reloading Setting
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: console,
+  });
   const port = process.env.PORT || 8000;
   //--------------------Swagger---------------------------//
   const config = new DocumentBuilder()
