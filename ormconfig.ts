@@ -1,6 +1,10 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { CakeStore } from 'src/cake-store/entities/CakkDummy.entity';
+import { Pictbl } from 'src/cake-store/entities/Pictbl';
+import { PictblDummy } from 'src/cake-store/entities/PictblDummy';
+import { Storetbl } from 'src/cake-store/entities/Storetbl';
+import { StoretblDummy } from 'src/cake-store/entities/StoretblDummy';
 
+require('dotenv').config({path: './.env'});
 const config: TypeOrmModuleOptions = {
   type: 'mysql',
   host: 'localhost',
@@ -8,10 +12,7 @@ const config: TypeOrmModuleOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  // username: 'cakk',
-  // password: 'nestjshi123!',
-  // database: 'cakk',
-  entities: [CakeStore],
+  entities: [Storetbl, StoretblDummy, Pictbl, PictblDummy],
   synchronize: false,
 };
 
