@@ -24,17 +24,14 @@ export class Storetbl {
   @Column('varchar', { name: 'menu', length: 1000 })
   menu: string;
 
-  @Column('varchar', { name: 'beforebuy', length: 350 })
+  @Column('varchar', { name: 'beforebuy', length: 500 })
   beforebuy: string;
 
-  @Column('varchar', { name: 'whenbuy', length: 350 })
+  @Column('varchar', { name: 'whenbuy', length: 500 })
   whenbuy: string;
 
-  @Column('varchar', { name: 'afterbuy', length: 350 })
+  @Column('varchar', { name: 'afterbuy', length: 500 })
   afterbuy: string;
-
-  @Column('varchar', { name: 'others', nullable: true, length: 500 })
-  others: string | null;
 
   @Column('varchar', { name: 'opened', nullable: true, length: 50 })
   opened: string | null;

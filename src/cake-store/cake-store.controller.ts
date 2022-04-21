@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CakeStoreService } from './cake-store.service';
 import { StoretblDummy } from './entities/StoretblDummy';
 
+@ApiTags('CakeStore')
 @Controller('cakestore')
 export class CakeStoreController {
   constructor(private readonly cakeStoreService: CakeStoreService) {}
