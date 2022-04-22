@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
+import { cakeSearchResultDTO } from './dto/cake-searchresult.dto';
 import { PictblDummy } from './entities/PictblDummy';
 import { StoretblDummy } from './entities/StoretblDummy';
 
@@ -15,6 +16,13 @@ export class CakeStoreService {
 
   public async findAll(): Promise<StoretblDummy[] | undefined> {
     return this.storeblRepo.find();
+  }
+
+  //가게 검색
+  public async storeSearch(data): Promise<cakeSearchResultDTO[] | undefined> {
+    // let address = data.address;
+    // let category = data.category;
+    return data;
   }
 
   // id로 가게별 데이터 불러오기
