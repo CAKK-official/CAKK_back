@@ -71,4 +71,10 @@ export class CakeStoreController {
 
     return result;
   }
+
+  @ApiTags('Detail')
+  @Get('share/:storeId')
+  async addShare(@Param('storeId') storeId: number): Promise<void> {
+    await this.cakeStoreService.addShares(storeId);
+  }
 }

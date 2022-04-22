@@ -32,6 +32,14 @@ export class CakeStoreService {
     return this.pictblRepo.find({ storeid: storeId });
   }
 
+  public async addShares(storeId: number): Promise<StoretblDummy | undefined> {
+    const data = await this.storeblRepo.findOne(storeId);
+    data.shares = data.shares + 1;
+    const newData = await this.storeblRepo.save(data);
+    Logger.log(newData);
+    return newData;
+  }
+
   // public async findByTag(category: string): Promise<CakeStore | undefined> {
   //   return this.StoreblRepo.find(category);
   // }
