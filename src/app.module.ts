@@ -8,7 +8,11 @@ import { Connection } from 'typeorm';
 import config from '../ormconfig';
 
 @Module({
-  imports: [ConfigModule.forRoot( {isGlobal: true} ), TypeOrmModule.forRoot(config), CakeStoreModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRoot(config),
+    CakeStoreModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
