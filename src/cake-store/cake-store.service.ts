@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { PictblDummy } from './entities/PictblDummy';
@@ -19,7 +19,11 @@ export class CakeStoreService {
 
   // id로 가게별 데이터 불러오기
   public async findById(storeId: number): Promise<StoretblDummy | undefined> {
-    return this.storeblRepo.findOne(storeId);
+    const data = await this.storeblRepo.findOne(storeId);
+    data.views = data.views + 1;
+    const newData = await this.storeblRepo.save(data);
+    Logger.log(newData);
+    return newData;
   }
 
   public async findBystoreId(
@@ -27,6 +31,7 @@ export class CakeStoreService {
   ): Promise<PictblDummy[] | undefined> {
     return this.pictblRepo.find({ storeid: storeId });
   }
+
   // public async findByTag(category: string): Promise<CakeStore | undefined> {
   //   return this.StoreblRepo.find(category);
   // }

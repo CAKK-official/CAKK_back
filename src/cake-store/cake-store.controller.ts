@@ -40,18 +40,14 @@ export class CakeStoreController {
       latlng,
     } = StoreEnt;
 
-    // delete StoreEnt.picture;
-    // delete StoreEnt.views;
-    // delete StoreEnt.shares;
-
     pictEnts.forEach((v) => {
       pictArray.push(v.url);
       [].forEach.call(v.category, function (e, i, a) {
-        Logger.log(e);
+        // Logger.log(e);
         storeCategory.push(e);
       });
     });
-    const StoreEnts = {
+    const result = {
       id,
       name,
       address,
@@ -70,9 +66,9 @@ export class CakeStoreController {
     };
 
     // Logger.log(StoreEnt);
-    Logger.log(pictArray);
-    Logger.log(storeCategory);
+    // Logger.log(pictArray);
+    // Logger.log(storeCategory);
 
-    return StoreEnts;
+    return result;
   }
 }
