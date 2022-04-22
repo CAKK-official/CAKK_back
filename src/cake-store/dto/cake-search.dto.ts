@@ -1,16 +1,13 @@
-import { IsNumber, IsString, IsUrl } from 'class-validator';
-import { Url } from 'url';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class CakeSearchDTO {
   @IsString()
-  title: string;
+  addresses: string[];
 
   @IsString()
-  name: string;
-
-  @IsString()
-  address: string;
-
-  @IsUrl()
-  image: Url;
+  @ApiProperty({
+    description: '검색할 카테고리',
+  })
+  category: string;
 }
