@@ -1,16 +1,20 @@
-import { IsNumber, IsString, IsUrl } from 'class-validator';
-import { Url } from 'url';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CakeSearchDTO {
   @IsString()
-  title: string;
+  @IsNotEmpty()
+  @ApiProperty({
+    description: '검색할 주소',
+    example: '["강남구", "강동구"]',
+  })
+  addresses: string[];
 
   @IsString()
-  name: string;
-
-  @IsString()
-  address: string;
-
-  @IsUrl()
-  image: Url;
+  @IsNotEmpty()
+  @ApiProperty({
+    description: '검색할 카테고리',
+    example: '레터링케이크',
+  })
+  category: string;
 }
