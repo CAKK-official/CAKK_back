@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  Connection,
-  createQueryBuilder,
-  getRepository,
-  Repository,
-} from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { cakeSearchResultDTO } from './dto/cake-searchresult.dto';
 import { PictblDummy } from './entities/PictblDummy';
 import { StoretblDummy } from './entities/StoretblDummy';
