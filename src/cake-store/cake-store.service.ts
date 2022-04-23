@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, getRepository, Repository } from 'typeorm';
+import {
+  Connection,
+  createQueryBuilder,
+  getRepository,
+  Repository,
+} from 'typeorm';
 import { cakeSearchResultDTO } from './dto/cake-searchresult.dto';
 import { PictblDummy } from './entities/PictblDummy';
 import { StoretblDummy } from './entities/StoretblDummy';
@@ -29,14 +34,10 @@ export class CakeStoreService {
       let result;
       for (let i = 0; i < addresses.length; i++) {
         const tmpresult = await getRepository(StoretblDummy)
-          .createQueryBuilder('storetbldummy')
-          .select([
-            'storetbldummy.id as id',
-            'storetbldummy.name as name',
-            'JSON_ARRAY(storetbldummy.picture) as picurl',
-            'storetbldummy.address as address',
-          ])
-          .where('storetbldummy.address like :address', {
+          .createQueryBuilder('storetbl')
+          .select(['id', 'name', 'JSON_ARRAY(picture) as picurl', 'address'])
+          .orderBy('id', 'ASC')
+          .where('storetbl.address like :address', {
             address: `%${addresses[i]}%`,
           })
           .getRawMany();
@@ -48,6 +49,31 @@ export class CakeStoreService {
 
     //주소 없고 카테고리만 있을 때
     else if (addresses == null && category != null) {
+      const tmpresult = await getRepository(PictblDummy)
+        .createQueryBuilder('pictbl')
+        .innerJoin('pictbl.store', 'storetbl')
+        .select([
+          'storetbl.id as id',
+          'storetbl.name as name',
+          'storetbl.address as address',
+          'JSON_ARRAY(pictbl.url) as picurl',
+        ])
+        .where('JSON_CONTAINS(pictbl.category, :category)', {
+          category: `"${category}"`,
+        })
+        .getRawMany();
+
+      //데이터 가공
+      const storeDataObj = new Object();
+      for (let i = 0; i < tmpresult.length; i++) {
+        const storeIData = tmpresult[i];
+        if (storeIData.id in storeDataObj) {
+          storeDataObj[storeIData.id].picurl.push(storeIData.picurl[0]);
+        } else {
+          storeDataObj[storeIData.id] = storeIData;
+        }
+      }
+      return Object.values(storeDataObj);
     }
     //주소 & 카테고리 둘 다 있을 때
     else if (addresses != null && category != null) {
