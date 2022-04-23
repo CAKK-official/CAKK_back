@@ -15,6 +15,7 @@ const config: TypeOrmModuleOptions = {
   database: process.env.DB_DATABASE,
   entities: [Storetbl, StoretblDummy, Pictbl, PictblDummy],
   synchronize: false,
+  logging: true,
   keepConnectionAlive: true,
 };
 

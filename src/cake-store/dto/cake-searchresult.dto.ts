@@ -7,6 +7,10 @@ export class cakeSearchResultDTO extends PickType(StoretblDummy, [
   'name',
   'address',
 ]) {
+  id: number;
+  name: string;
+  address: string;
+
   @IsArray()
   @ApiProperty({
     description: '사진 주소배열',

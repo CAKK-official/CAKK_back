@@ -21,7 +21,6 @@ export class CakeStoreController {
   async storeSerach(
     @Body() data: CakeSearchDTO,
   ): Promise<cakeSearchResultDTO[]> {
-    console.log(data.addresses, data.category);
     return await this.cakeStoreService.storeSearch(data);
   }
 
