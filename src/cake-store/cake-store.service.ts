@@ -51,15 +51,15 @@ export class CakeStoreService {
           'storetbl.id as id',
           'storetbl.name as name',
           'storetbl.address as address',
-          'JSON_ARRAY(pictbl.url) as picurl',
-          // 'category as category',
+          `JSON_ARRAYAGG(pictbl.url) as picurl`,
         ])
         .where('JSON_CONTAINS(pictbl.category, :category)', {
           category: `"${category}"`,
         })
+        .groupBy('id')
         .getRawMany();
 
-      return this.searchResultProcess(tmpresult);
+      return tmpresult;
     }
 
     //주소 & 카테고리 둘 다 있을 때
@@ -73,7 +73,7 @@ export class CakeStoreService {
             'storetbl.id as id',
             'storetbl.name as name',
             'storetbl.address as address',
-            'JSON_ARRAY(pictbl.url) as picurl',
+            'JSON_ARRAYAGG(pictbl.url) as picurl',
             // 'category as category',
           ])
           .where('address LIKE :address', {
@@ -82,13 +82,14 @@ export class CakeStoreService {
           .andWhere('JSON_CONTAINS(pictbl.category, :category)', {
             category: `"${category}"`,
           })
+          .groupBy('id')
           .getRawMany();
 
         if (i == 0) result = tmpresult;
         else result.push(tmpresult);
       }
 
-      return this.searchResultProcess(result);
+      return result;
     }
   }
 
@@ -105,19 +106,4 @@ export class CakeStoreService {
   // public async findByTag(category: string): Promise<CakeStore | undefined> {
   //   return this.StoreblRepo.find(category);
   // }
-
-  //검색 결과 데이터 가공
-  public async searchResultProcess(tmpresult): Promise<Array<JSON>> {
-    const storeDataObj = new Object();
-
-    for (let i = 0; i < tmpresult.length; i++) {
-      const storeIData = tmpresult[i];
-      if (storeIData.id in storeDataObj) {
-        storeDataObj[storeIData.id].picurl.push(storeIData.picurl[0]);
-      } else {
-        storeDataObj[storeIData.id] = storeIData;
-      }
-    }
-    return Object.values(storeDataObj);
-  }
 }
