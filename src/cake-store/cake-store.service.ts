@@ -19,10 +19,15 @@ export class CakeStoreService {
   }
 
   //가게 검색
-  public async storeSearch(data): Promise<cakeSearchResultDTO[] | any> {
+  public async storeSearch(page, data): Promise<cakeSearchResultDTO[] | any> {
     const addresses =
       data.addresses != 'null' ? JSON.parse(data.addresses) : null;
     const category = data.category != 'null' ? data.category : null;
+
+    console.log(page);
+    const take = 9;
+    const pages = page || 1;
+    const skip = (pages - 1) * take;
 
     //주소만 있을 때
     if (addresses != null && category == null) {
@@ -39,27 +44,29 @@ export class CakeStoreService {
         if (i == 0) result = tmpresult;
         else result.push(tmpresult);
       }
-      return result;
+      const end = Math.min(skip + take, result.length);
+      return result.slice(skip, end);
     }
 
     //주소 없고 카테고리만 있을 때
     else if (addresses == null && category != null) {
-      const tmpresult = await getRepository(PictblDummy)
+      const query = await this.pictblRepo
         .createQueryBuilder('pictbl')
-        .innerJoin('pictbl.store', 'storetbl')
         .select([
           'storetbl.id as id',
           'storetbl.name as name',
           'storetbl.address as address',
-          `JSON_ARRAYAGG(pictbl.url) as picurl`,
+          `JSON_ARRAYAGG( pictbl.url) as picurl`,
         ])
+        .innerJoin('pictbl.store', 'storetbl')
         .where('JSON_CONTAINS(pictbl.category, :category)', {
           category: `"${category}"`,
         })
-        .groupBy('id')
-        .getRawMany();
+        .groupBy('id');
 
-      return tmpresult;
+      const result = await query.offset(skip).limit(take).getRawMany();
+
+      return result;
     }
 
     //주소 & 카테고리 둘 다 있을 때
@@ -88,8 +95,8 @@ export class CakeStoreService {
         if (i == 0) result = tmpresult;
         else result.push(tmpresult);
       }
-
-      return result;
+      const end = Math.min(skip + take, result.length);
+      return result.slice(skip, end);
     }
   }
 
