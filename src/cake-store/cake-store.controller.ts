@@ -5,6 +5,7 @@ import { StoretblDummy } from './entities/StoretblDummy';
 import { StoretblDto } from './dto/cake-Each.dto';
 import { cakeSearchResultDTO } from './dto/cake-searchresult.dto';
 import { CakeSearchDTO } from './dto/cake-search.dto';
+import { Query } from '@nestjs/common';
 @Controller('cakestore')
 export class CakeStoreController {
   constructor(private readonly cakeStoreService: CakeStoreService) {}
@@ -18,9 +19,10 @@ export class CakeStoreController {
   // 가게 검색하기
   @Post('/search')
   async storeSerach(
+    @Query('page') page,
     @Body() data: CakeSearchDTO,
   ): Promise<cakeSearchResultDTO[]> {
-    return await this.cakeStoreService.storeSearch(data);
+    return await this.cakeStoreService.storeSearch(page, data);
   }
 
   // id로 가게별 데이터 불러오기
