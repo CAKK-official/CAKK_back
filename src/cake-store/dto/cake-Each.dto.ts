@@ -1,6 +1,7 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, IsJSON, IsUrl } from 'class-validator';
 
-export class StoretblDto {
+export class StoreEachDto {
   @IsNumber()
   id: number;
 

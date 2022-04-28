@@ -1,8 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getRepository, Repository } from 'typeorm';
+import { getConnection, getRepository, Repository } from 'typeorm';
+import { StoreEachDto } from './dto/cake-Each.dto';
 import { cakeSearchResultDTO } from './dto/cake-searchresult.dto';
 import { PictblDummy } from './entities/PictblDummy';
+import { Storetbl } from './entities/Storetbl';
 import { StoretblDummy } from './entities/StoretblDummy';
 
 @Injectable()
@@ -101,29 +103,58 @@ export class CakeStoreService {
   }
 
   // id로 가게별 데이터 불러오기
-  public async findById(storeId: number): Promise<StoretblDummy | undefined> {
-    const data = await this.storeblRepo.findOne(storeId);
-    data.views = data.views + 1;
-    const newData = await this.storeblRepo.save(data);
-    Logger.log(newData);
-    return newData;
+  public async findById(storeId: number): Promise<StoreEachDto[] | any> {
+    const data = await getRepository(PictblDummy)
+      .createQueryBuilder('pictbl')
+      .innerJoinAndSelect('pictbl.store', 'storetbl')
+      .select('storetbl.id', 'id')
+      .addSelect('storetbl.name', 'name')
+      .addSelect('storetbl.address ', 'address')
+      .addSelect('storetbl.tel', 'tel')
+      .addSelect('storetbl.notice ', 'notice')
+      .addSelect('storetbl.url', 'url')
+      .addSelect('storetbl.menu', 'menu')
+      .addSelect('storetbl.beforebuy', 'beforebuy')
+      .addSelect('storetbl.afterbuy', 'afterbuy')
+      .addSelect('storetbl.whenbuy', 'whenbuy')
+      .addSelect('storetbl.opened', 'opend')
+      .addSelect('storetbl.closed', 'closed')
+      .addSelect('storetbl.latlng', 'latlng')
+      .addSelect('storetbl.views', 'views')
+      .addSelect('JSON_ARRAYAGG(pictbl.url)', 'pictArray')
+      .addSelect('JSON_ARRAYAGG(pictbl.category)', 'storeCategory')
+      .where('storetbl.id = :storeId', { storeId: storeId })
+      .getRawMany();
+
+    Logger.log(data);
+    return data;
   }
 
-  public async findBystoreId(
-    storeId: number,
-  ): Promise<PictblDummy[] | undefined> {
-    return this.pictblRepo.find({ storeid: storeId });
+  public async addViews(storeId: number): Promise<any> {
+    await getRepository(StoretblDummy)
+      .createQueryBuilder('storetbl')
+      .update(StoretblDummy)
+      .set({
+        views: () => 'views + 1',
+      })
+      .where('id = :storeId', { storeId: storeId })
+      .execute();
   }
 
-  public async addShares(storeId: number): Promise<StoretblDummy | undefined> {
-    const data = await this.storeblRepo.findOne(storeId);
-    data.shares = data.shares + 1;
-    const newData = await this.storeblRepo.save(data);
-    Logger.log(newData);
-    return newData;
-  }
-
-  // public async findByTag(category: string): Promise<CakeStore | undefined> {
-  //   return this.StoreblRepo.find(category);
+  // public async findBystoreId(
+  //   storeId: number,
+  // ): Promise<PictblDummy[] | undefined> {
+  //   return this.pictblRepo.find({ storeid: storeId });
   // }
+
+  public async addShares(storeId: number): Promise<any> {
+    await getRepository(StoretblDummy)
+      .createQueryBuilder('storetbl')
+      .update(StoretblDummy)
+      .set({
+        shares: () => 'shares + 1',
+      })
+      .where('id = :storeId', { storeId: storeId })
+      .execute();
+  }
 }

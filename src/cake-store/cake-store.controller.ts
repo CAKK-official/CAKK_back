@@ -2,7 +2,7 @@ import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CakeStoreService } from './cake-store.service';
 import { StoretblDummy } from './entities/StoretblDummy';
-import { StoretblDto } from './dto/cake-Each.dto';
+import { StoreEachDto } from './dto/cake-Each.dto';
 import { cakeSearchResultDTO } from './dto/cake-searchresult.dto';
 import { CakeSearchDTO } from './dto/cake-search.dto';
 import { Query } from '@nestjs/common';
@@ -25,62 +25,21 @@ export class CakeStoreController {
     return await this.cakeStoreService.storeSearch(page, data);
   }
 
-  // id로 가게별 데이터 불러오기
-  @ApiTags('Detail')
-  @Get(':storeId')
-  async findOne(
-    @Param('storeId') storeId: number,
-  ): Promise<StoretblDto | undefined> {
-    const StoreEnt = await this.cakeStoreService.findById(storeId);
-    const pictEnts = await this.cakeStoreService.findBystoreId(storeId);
-    const pictArray = [];
-    const storeCategory = [];
-    const {
-      id,
-      name,
-      address,
-      tel,
-      notice,
-      url,
-      menu,
-      beforebuy,
-      afterbuy,
-      whenbuy,
-      opened,
-      closed,
-      latlng,
-    } = StoreEnt;
-
-    pictEnts.forEach((v) => {
-      pictArray.push(v.url);
-      [].forEach.call(v.category, function (e, i, a) {
-        // Logger.log(e);
-        storeCategory.push(e);
+  // ID로 한 가게 데이터 불러오기
+  @Get('/:storeId')
+  async findOne(@Param('storeId') storeId: number): Promise<StoreEachDto[]> {
+    await this.cakeStoreService.addViews(storeId);
+    const data = await this.cakeStoreService.findById(storeId);
+    const tempCategpry = [];
+    const originalCategory = data[0].storeCategory;
+    originalCategory.forEach((v) => {
+      v.forEach((e) => {
+        tempCategpry.push(e);
       });
     });
-    const result = {
-      id,
-      name,
-      address,
-      tel,
-      notice,
-      url,
-      menu,
-      beforebuy,
-      afterbuy,
-      whenbuy,
-      opened,
-      closed,
-      latlng,
-      pictArray,
-      storeCategory,
-    };
-
-    // Logger.log(StoreEnt);
-    // Logger.log(pictArray);
-    // Logger.log(storeCategory);
-
-    return result;
+    data[0].storeCategory = tempCategpry;
+    Logger.log(data[0].storeCategory);
+    return data;
   }
 
   @ApiTags('Detail')
