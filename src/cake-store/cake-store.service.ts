@@ -18,6 +18,17 @@ export class CakeStoreService {
     return this.storeblRepo.find();
   }
 
+  //인기 케이크 가게 검색(3개)
+  public async popularStoreSearch(): Promise<any> {
+    const result = await getRepository(StoretblDummy)
+      .createQueryBuilder('storetbl')
+      .select(['id', 'name', 'picture', 'address', '(shares + views) as score'])
+      .orderBy('score', 'DESC')
+      .limit(3)
+      .getRawMany();
+
+    return result;
+  }
   //가게 검색
   public async storeSearch(page, data): Promise<cakeSearchResultDTO[] | any> {
     const addresses =
@@ -45,7 +56,11 @@ export class CakeStoreService {
         else result.push(tmpresult);
       }
       const end = Math.min(skip + take, result.length);
-      return result.slice(skip, end);
+      return {
+        page: page,
+        totalpage: Math.ceil(result.length / 9),
+        data: result.slice(skip, end),
+      };
     }
 
     //주소 없고 카테고리만 있을 때
@@ -56,7 +71,7 @@ export class CakeStoreService {
           'storetbl.id as id',
           'storetbl.name as name',
           'storetbl.address as address',
-          `JSON_ARRAYAGG( pictbl.url) as picurl`,
+          `JSON_ARRAYAGG(pictbl.url) as picurl`,
         ])
         .innerJoin('pictbl.store', 'storetbl')
         .where('JSON_CONTAINS(pictbl.category, :category)', {
@@ -64,8 +79,14 @@ export class CakeStoreService {
         })
         .groupBy('id');
 
-      const result = await query.offset(skip).limit(take).getRawMany();
+      const tmpresult = await query.getRawMany();
+      const end = Math.min(skip + take, tmpresult.length);
 
+      const result = {
+        page: page,
+        totalpage: Math.ceil(tmpresult.length / 9),
+        data: tmpresult.slice(skip, end),
+      };
       return result;
     }
 
@@ -95,8 +116,13 @@ export class CakeStoreService {
         if (i == 0) result = tmpresult;
         else result.push(tmpresult);
       }
+
       const end = Math.min(skip + take, result.length);
-      return result.slice(skip, end);
+      return {
+        page: page,
+        totalpage: Math.ceil(result.length / 9),
+        data: result.slice(skip, end),
+      };
     }
   }
 

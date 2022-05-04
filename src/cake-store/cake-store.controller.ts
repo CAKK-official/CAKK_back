@@ -16,9 +16,15 @@ export class CakeStoreController {
     return await this.cakeStoreService.findAll();
   }
 
+  //인기 케이크 가게 (3개) 가져오기
+  @Get('/popular')
+  async popularStoreSearch() {
+    return await this.cakeStoreService.popularStoreSearch();
+  }
+
   // 가게 검색하기
   @Post('/search')
-  async storeSerach(
+  async storeSearch(
     @Query('page') page,
     @Body() data: CakeSearchDTO,
   ): Promise<cakeSearchResultDTO[]> {
