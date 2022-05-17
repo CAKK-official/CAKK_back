@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CakeStoreService } from './cake-store.service';
-import { StoretblDummy } from './entities/StoretblDummy';
+import { Storetbl } from './entities/Storetbl';
 import { StoretblDto } from './dto/cake-Each.dto';
 import { cakeSearchResultDTO } from './dto/cake-searchresult.dto';
 import { CakeSearchDTO } from './dto/cake-search.dto';
@@ -12,7 +12,7 @@ export class CakeStoreController {
 
   // 전체 데이터 불러오기
   @Get()
-  async getAll(): Promise<StoretblDummy[]> {
+  async getAll(): Promise<Storetbl[]> {
     return await this.cakeStoreService.findAll();
   }
 

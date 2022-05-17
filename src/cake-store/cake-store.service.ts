@@ -2,25 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getRepository, Repository } from 'typeorm';
 import { cakeSearchResultDTO } from './dto/cake-searchresult.dto';
-import { PictblDummy } from './entities/PictblDummy';
-import { StoretblDummy } from './entities/StoretblDummy';
+import { Pictbl } from './entities/Pictbl';
+import { Storetbl } from './entities/Storetbl';
 
 @Injectable()
 export class CakeStoreService {
   constructor(
-    @InjectRepository(StoretblDummy)
-    private readonly storeblRepo: Repository<StoretblDummy>,
-    @InjectRepository(PictblDummy)
-    private readonly pictblRepo: Repository<PictblDummy>,
+    @InjectRepository(Storetbl)
+    private readonly storeblRepo: Repository<Storetbl>,
+    @InjectRepository(Pictbl)
+    private readonly pictblRepo: Repository<Pictbl>,
   ) {}
 
-  public async findAll(): Promise<StoretblDummy[] | undefined> {
+  public async findAll(): Promise<Storetbl[] | undefined> {
     return this.storeblRepo.find();
   }
 
   //인기 케이크 가게 검색(3개)
   public async popularStoreSearch(): Promise<any> {
-    const result = await getRepository(StoretblDummy)
+    const result = await getRepository(Storetbl)
       .createQueryBuilder('storetbl')
       .select(['id', 'name', 'picture', 'address', '(shares + views) as score'])
       .orderBy('score', 'DESC')
@@ -44,7 +44,7 @@ export class CakeStoreService {
     if (addresses != null && category == null) {
       let result;
       for (let i = 0; i < addresses.length; i++) {
-        const tmpresult = await getRepository(StoretblDummy)
+        const tmpresult = await getRepository(Storetbl)
           .createQueryBuilder('storetbl')
           .select(['id', 'name', 'JSON_ARRAY(picture) as picurl', 'address'])
           .orderBy('id', 'ASC')
@@ -94,7 +94,7 @@ export class CakeStoreService {
     else if (addresses != null && category != null) {
       let result;
       for (let i = 0; i < addresses.length; i++) {
-        const tmpresult = await getRepository(PictblDummy)
+        const tmpresult = await getRepository(Pictbl)
           .createQueryBuilder('pictbl')
           .innerJoin('pictbl.store', 'storetbl')
           .select([
@@ -127,13 +127,11 @@ export class CakeStoreService {
   }
 
   // id로 가게별 데이터 불러오기
-  public async findById(storeId: number): Promise<StoretblDummy | undefined> {
+  public async findById(storeId: number): Promise<Storetbl | undefined> {
     return this.storeblRepo.findOne(storeId);
   }
 
-  public async findBystoreId(
-    storeId: number,
-  ): Promise<PictblDummy[] | undefined> {
+  public async findBystoreId(storeId: number): Promise<Pictbl[] | undefined> {
     return this.pictblRepo.find({ storeid: storeId });
   }
   // public async findByTag(category: string): Promise<CakeStore | undefined> {
