@@ -22,7 +22,13 @@ export class CakeStoreService {
   public async popularStoreSearch(): Promise<any> {
     const result = await getRepository(Storetbl)
       .createQueryBuilder('storetbl')
-      .select(['id', 'name', 'JSON_ARRAY(picture) as picurl', 'address'])
+      .select([
+        'id',
+        'name',
+        'JSON_ARRAY(picture) as picurl',
+        'address',
+        '(shares + views) as score',
+      ])
       .orderBy('score', 'DESC')
       .limit(3)
       .getRawMany();
