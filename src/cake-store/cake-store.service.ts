@@ -152,7 +152,6 @@ export class CakeStoreService {
       .addSelect('storetbl.opened', 'opend')
       .addSelect('storetbl.closed', 'closed')
       .addSelect('storetbl.latlng', 'latlng')
-      .addSelect('storetbl.views', 'views')
       .addSelect('JSON_ARRAYAGG(pictbl.url)', 'pictArray')
       .addSelect('JSON_ARRAYAGG(pictbl.category)', 'storeCategory')
       .where('storetbl.id = :storeId', { storeId: storeId })
