@@ -60,7 +60,7 @@ export class CakeStoreService {
           })
           .getRawMany();
         if (i == 0) result = tmpresult;
-        else result.push(tmpresult);
+        else result = result.concat(tmpresult);
       }
       const end = Math.min(skip + take, result.length);
       return {
@@ -121,7 +121,7 @@ export class CakeStoreService {
           .getRawMany();
 
         if (i == 0) result = tmpresult;
-        else result.push(tmpresult);
+        else result = result.concat(tmpresult);
       }
 
       const end = Math.min(skip + take, result.length);
