@@ -156,8 +156,6 @@ export class CakeStoreService {
       .addSelect('JSON_ARRAYAGG(pictbl.category)', 'storeCategory')
       .where('storetbl.id = :storeId', { storeId: storeId })
       .getRawMany();
-
-    Logger.log(data);
     return data;
   }
 
