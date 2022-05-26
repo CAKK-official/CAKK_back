@@ -32,6 +32,7 @@ export class CakeStoreController {
   }
 
   // ID로 한 가게 데이터 불러오기
+  @ApiTags('Detail')
   @Get('/:storeId')
   async findOne(@Param('storeId') storeId: number): Promise<StoreEachDto[]> {
     await this.cakeStoreService.addViews(storeId);
@@ -43,13 +44,15 @@ export class CakeStoreController {
         tempCategpry.push(e);
       });
     });
-    data[0].storeCategory = tempCategpry;
+    const temp = new Set(tempCategpry);
+    Logger.log(temp);
+    data[0].storeCategory = [...temp];
     Logger.log(data[0].storeCategory);
     return data;
   }
 
   @ApiTags('Detail')
-  @Get('share/:storeId')
+  @Post('share/:storeId')
   async addShare(@Param('storeId') storeId: number): Promise<void> {
     await this.cakeStoreService.addShares(storeId);
   }
