@@ -33,7 +33,7 @@
             with:
               args: --acl public-read --follow-symlinks --delete
             env:
-              AWS_S3_BUCKET: arn:aws:s3:::7th-team3-cakk
+              AWS_S3_BUCKET: 7th-team3-cakk
               AWS_ACCESS_KEY_ID: ${{ secrets. AWS_IAM_MANAGER_KEY_ID }}
               AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_MANAGER_SECRET_ACCESS_KEY }}
               AWS_REGION: ap-northeast-2
