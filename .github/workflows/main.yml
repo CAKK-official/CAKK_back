@@ -23,7 +23,6 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
-          #password: ${{ secrets.PASSWORD }}
           script: |
             cd CAKK_back
             git reset --hard
