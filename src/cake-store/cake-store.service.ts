@@ -21,15 +21,17 @@ export class CakeStoreService {
 
   //인기 케이크 가게 검색(3개)
   public async popularStoreSearch(): Promise<any> {
-    const result = await getRepository(Storetbl)
-      .createQueryBuilder('storetbl')
+    const result = await getRepository(Pictbl)
+      .createQueryBuilder('pictbl')
+      .innerJoin('pictbl.store', 'storetbl')
       .select([
-        'id',
-        'name',
-        'JSON_ARRAY(picture) as picurl',
-        'address',
+        'storetbl.id as id',
+        'storetbl.name as name',
+        'storetbl.address as address',
+        'JSON_ARRAYAGG(pictbl.url) as picurl',
         '(shares + views) as score',
       ])
+      .groupBy('id')
       .orderBy('score', 'DESC')
       .limit(3)
       .getRawMany();
