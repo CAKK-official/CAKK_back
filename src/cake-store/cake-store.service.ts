@@ -186,4 +186,35 @@ export class CakeStoreService {
       .where('id = :storeId', { storeId: storeId })
       .execute();
   }
+
+  public async NearbyStore(
+    Pinlng: number,
+    Pinlat: number,
+    category: string,
+  ): Promise<any> {
+    const data = getRepository(Pictbl)
+      .createQueryBuilder('pictbl')
+      .innerJoin('pictbl.store', 'storetbl')
+      .select('storetbl.id as id')
+      .addSelect('storetbl.name as name')
+      .addSelect('storetbl.address as address')
+      .addSelect('storetbl.tel as tel')
+      .addSelect('storetbl.url as url')
+      .addSelect('storetbl.latlng as latlng')
+      .addSelect('JSON_ARRAYAGG(pictbl.url)', 'pictArray')
+      .addSelect('JSON_ARRAYAGG(pictbl.category)', 'storeCategory')
+      .addSelect(
+        `ST_Distance_Sphere(POINT(${Pinlng}, ${Pinlat}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
+        'distance',
+      )
+      .where(
+        `ST_Distance_Sphere(POINT(${Pinlng}, ${Pinlat}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 1000`,
+      )
+      .andWhere('JSON_CONTAINS(pictbl.category, :category)', {
+        category: `"${category}"`,
+      })
+      .groupBy('id')
+      .getRawMany();
+    return data;
+  }
 }

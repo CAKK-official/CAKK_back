@@ -6,6 +6,7 @@ import { StoreEachDto } from './dto/cake-Each.dto';
 import { cakeSearchResultDTO } from './dto/cake-searchresult.dto';
 import { CakeSearchDTO } from './dto/cake-search.dto';
 import { Query } from '@nestjs/common';
+import { NearbyDTO } from './dto/cake-nearby.dto';
 @Controller('cakestore')
 export class CakeStoreController {
   constructor(private readonly cakeStoreService: CakeStoreService) {}
@@ -38,6 +39,7 @@ export class CakeStoreController {
     await this.cakeStoreService.addViews(storeId);
     const data = await this.cakeStoreService.findById(storeId);
     const tempCategpry = [];
+    Logger.log(data[0].storeCategory);
     const originalCategory = data[0].storeCategory;
     originalCategory.forEach((v) => {
       v.forEach((e) => {
@@ -55,5 +57,28 @@ export class CakeStoreController {
   @Post('share/:storeId')
   async addShare(@Param('storeId') storeId: number): Promise<void> {
     await this.cakeStoreService.addShares(storeId);
+  }
+
+  @Post('/nearby')
+  async nearby(@Body() data: NearbyDTO): Promise<any> {
+    const temp = await this.cakeStoreService.NearbyStore(
+      data.latlng[0],
+      data.latlng[1],
+      data.category,
+    );
+
+    // 카테고리가 필요하다면 사용
+    temp.forEach((k) => {
+      const tempCategpry = [];
+      const originalCategory = k.storeCategory;
+      originalCategory.forEach((v) => {
+        v.forEach((e) => {
+          tempCategpry.push(e);
+        });
+      });
+      const newCategory = new Set(tempCategpry);
+      k.storeCategory = [...newCategory];
+    });
+    return temp;
   }
 }
