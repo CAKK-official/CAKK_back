@@ -68,17 +68,17 @@ export class CakeStoreController {
     );
 
     // 카테고리가 필요하다면 사용
-    temp.forEach((k) => {
-      const tempCategpry = [];
-      const originalCategory = k.storeCategory;
-      originalCategory.forEach((v) => {
-        v.forEach((e) => {
-          tempCategpry.push(e);
-        });
-      });
-      const newCategory = new Set(tempCategpry);
-      k.storeCategory = [...newCategory];
-    });
+    // temp.forEach((k) => {
+    //   const tempCategpry = [];
+    //   const originalCategory = k.storeCategory;
+    //   originalCategory.forEach((v) => {
+    //     v.forEach((e) => {
+    //       tempCategpry.push(e);
+    //     });
+    //   });
+    //   const newCategory = new Set(tempCategpry);
+    //   k.storeCategory = [...newCategory];
+    // });
     return temp;
   }
 }

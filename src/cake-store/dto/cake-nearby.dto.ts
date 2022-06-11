@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class NearbyDTO {
@@ -10,10 +10,10 @@ export class NearbyDTO {
   latlng: number[];
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: '검색할 카테고리',
     example: 'letter',
+    nullable: true,
   })
   category: string;
 }
