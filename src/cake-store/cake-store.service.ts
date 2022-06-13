@@ -161,6 +161,7 @@ export class CakeStoreService {
     return data;
   }
 
+  // 조회수 증가
   public async addViews(storeId: number): Promise<any> {
     await getRepository(Storetbl)
       .createQueryBuilder('storetbl')
@@ -178,6 +179,7 @@ export class CakeStoreService {
   //   return this.pictblRepo.find({ storeid: storeId });
   // }
 
+  // 공유수 증가
   public async addShares(storeId: number): Promise<any> {
     await getRepository(Storetbl)
       .createQueryBuilder('storetbl')
@@ -187,5 +189,74 @@ export class CakeStoreService {
       })
       .where('id = :storeId', { storeId: storeId })
       .execute();
+  }
+
+  // 일정거리 내 가게정보
+  public async NearbyStore(
+    Pinlng: number,
+    Pinlat: number,
+    category: string,
+  ): Promise<any> {
+    // 카테고리 + 위경도가 있을 때
+    if (category != null) {
+      const data = getRepository(Pictbl)
+        .createQueryBuilder('pictbl')
+        .innerJoin('pictbl.store', 'storetbl')
+        .select('storetbl.id as id')
+        .addSelect('storetbl.name as name')
+        .addSelect('storetbl.address as address')
+        .addSelect('storetbl.tel as tel')
+        .addSelect('storetbl.url as url')
+        .addSelect('storetbl.opened as opened')
+        .addSelect('storetbl.closed as closed')
+        // 혹시몰라서 조회수 공유수도 ===
+        .addSelect('storetbl.views as views')
+        .addSelect('storetbl.shares as shares')
+        // =======
+        .addSelect('storetbl.latlng as latlng')
+        .addSelect('JSON_ARRAYAGG(pictbl.url)', 'pictArray')
+        // .addSelect('JSON_ARRAYAGG(pictbl.category)', 'storeCategory')
+        .addSelect(
+          `ST_Distance_Sphere(POINT(${Pinlng}, ${Pinlat}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
+          'distance',
+        )
+        .where(
+          `ST_Distance_Sphere(POINT(${Pinlng}, ${Pinlat}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 1000`,
+        )
+        .andWhere('JSON_CONTAINS(pictbl.category, :category)', {
+          category: `"${category}"`,
+        })
+        .groupBy('id')
+        .getRawMany();
+      return data;
+      // 카테고리 없이 위도경도만 사용
+    } else if (category == null) {
+      const data = getRepository(Pictbl)
+        .createQueryBuilder('pictbl')
+        .innerJoin('pictbl.store', 'storetbl')
+        .select('storetbl.id as id')
+        .addSelect('storetbl.name as name')
+        .addSelect('storetbl.address as address')
+        .addSelect('storetbl.tel as tel')
+        .addSelect('storetbl.url as url')
+        .addSelect('storetbl.opened as opened')
+        .addSelect('storetbl.closed as closed')
+        // 혹시몰라서 조회수 공유수도 ===
+        .addSelect('storetbl.views as views')
+        .addSelect('storetbl.shares as shares')
+        // =======
+        .addSelect('storetbl.latlng as latlng')
+        .addSelect('JSON_ARRAYAGG(pictbl.url)', 'pictArray')
+        .addSelect(
+          `ST_Distance_Sphere(POINT(${Pinlng}, ${Pinlat}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
+          'distance',
+        )
+        .where(
+          `ST_Distance_Sphere(POINT(${Pinlng}, ${Pinlat}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 1000`,
+        )
+        .groupBy('id')
+        .getRawMany();
+      return data;
+    }
   }
 }

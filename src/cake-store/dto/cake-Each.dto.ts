@@ -1,46 +1,22 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { IsNumber, IsString, IsJSON, IsUrl } from 'class-validator';
+import { Storetbl } from '../entities/Storetbl';
 
-export class StoreEachDto {
-  @IsNumber()
-  id: number;
-
-  @IsString()
-  name: string;
-
-  @IsString()
-  address: string;
-
-  @IsString()
-  tel: string;
-
-  @IsString()
-  notice: string;
-
-  @IsUrl()
-  url: string;
-
-  @IsString()
-  menu: string;
-
-  @IsString()
-  beforebuy: string;
-
-  @IsString()
-  whenbuy: string;
-
-  @IsString()
-  afterbuy: string;
-
-  @IsString()
-  opened: string;
-
-  @IsString()
-  closed: string;
-
-  @IsJSON()
-  latlng: object;
-
+export class StoreEachDto extends PickType(Storetbl, [
+  'id',
+  'name',
+  'address',
+  'tel',
+  'notice',
+  'url',
+  'menu',
+  'beforebuy',
+  'afterbuy',
+  'whenbuy',
+  'opened',
+  'closed',
+  'latlng',
+] as const) {
   @IsJSON()
   pictArray: object;
 
