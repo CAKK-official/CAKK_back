@@ -19,10 +19,9 @@ jobs:
       - name: Run scripts in server
         uses: appleboy/ssh-action@master
         with:
+          key: ${{ secrets.SSH_KEY }}
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT }}
           script: |
             cd CAKK_back
             git reset --hard
