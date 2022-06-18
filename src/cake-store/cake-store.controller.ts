@@ -59,7 +59,7 @@ export class CakeStoreController {
     await this.cakeStoreService.addShares(storeId);
   }
 
-  @ApiTags('Map')
+  @ApiTags('maaaaap')
   @Post('/nearby')
   async nearby(@Body() data: NearbyDTO): Promise<any> {
     const temp = await this.cakeStoreService.NearbyStore(
