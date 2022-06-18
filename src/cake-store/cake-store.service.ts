@@ -40,9 +40,8 @@ export class CakeStoreService {
   }
   //가게 검색
   public async storeSearch(page, data): Promise<cakeSearchResultDTO[] | any> {
-    const addresses =
-      data.addresses != 'null' ? JSON.parse(data.addresses) : null;
-    const category = data.category != 'null' ? data.category : null;
+    const addresses = data.addresses != '' ? JSON.parse(data.addresses) : null;
+    const category = data.category != '' ? data.category : null;
 
     console.log(page);
     const take = 9;
