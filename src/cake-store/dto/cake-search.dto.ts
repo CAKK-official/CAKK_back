@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsString } from 'class-validator';
 
 export class CakeSearchDTO {
-  @IsString()
+  @IsArray()
   @ApiProperty({
     description: '검색할 주소',
     example: '["강남구", "강동구"]',
