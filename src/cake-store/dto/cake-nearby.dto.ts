@@ -12,7 +12,7 @@ export class NearbyDTO {
   @IsString()
   @ApiProperty({
     description: '검색할 카테고리',
-    example: 'letter',
+    example: '',
     nullable: true,
   })
   category: string;

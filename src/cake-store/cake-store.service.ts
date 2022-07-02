@@ -196,6 +196,7 @@ export class CakeStoreService {
     Pinlat: number,
     category: string,
   ): Promise<any> {
+    category = category != '' ? category : null;
     // 카테고리 + 위경도가 있을 때
     if (category != null) {
       const data = getRepository(Pictbl)
