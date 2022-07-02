@@ -252,7 +252,7 @@ export class CakeStoreService {
           'distance',
         )
         .where(
-          `ST_Distance_Sphere(POINT(${Pinlng}, ${Pinlat}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 1000`,
+          `ST_Distance_Sphere(POINT(${Pinlng}, ${Pinlat}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 5000`,
         )
         .groupBy('id')
         .getRawMany();
