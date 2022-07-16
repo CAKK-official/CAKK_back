@@ -62,11 +62,11 @@ export class CakeStoreController {
   @ApiTags('Map')
   @Post('/nearby')
   async nearby(@Body() data: NearbyDTO): Promise<any> {
-    const temp = await this.cakeStoreService.NearbyStore(
-      data.latlng[0],
-      data.latlng[1],
-      data.category,
-    );
+    if (data.latlng == '' && data.category != '') {
+      data.latlng = null;
+    } else if (data.category == '' && data.latlng != []) {
+      data.category = null;
+    }
 
     // 카테고리가 필요하다면 사용
     // temp.forEach((k) => {
@@ -80,6 +80,6 @@ export class CakeStoreController {
     //   const newCategory = new Set(tempCategpry);
     //   k.storeCategory = [...newCategory];
     // });
-    return temp;
+    return await this.cakeStoreService.NearbyStore(data.latlng, data.category);
   }
 }
