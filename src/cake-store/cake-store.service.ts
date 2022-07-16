@@ -191,12 +191,11 @@ export class CakeStoreService {
   }
 
   // 일정거리 내 가게정보
-  public async NearbyStore(
-    latlngs: number[] | any,
-    category: string,
-  ): Promise<any> {
+  public async NearbyStore(latlngs: number[], category: string): Promise<any> {
     // 카테고리 + 위경도가 있을 때
-    if (category != null && latlngs != null) {
+    if (category != null) {
+      Logger.log(latlngs[0]);
+      Logger.log(category);
       const data = getRepository(Pictbl)
         .createQueryBuilder('pictbl')
         .innerJoin('pictbl.store', 'storetbl')
@@ -215,20 +214,23 @@ export class CakeStoreService {
         .addSelect('JSON_ARRAYAGG(pictbl.url)', 'pictArray')
         // .addSelect('JSON_ARRAYAGG(pictbl.category)', 'storeCategory')
         .addSelect(
-          `ST_Distance_Sphere(POINT(${latlngs[0]}, ${latlngs[1]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
+          `ST_Distance_Sphere(POINT(${latlngs[1]} ,${latlngs[0]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'), JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
           'distance',
         )
         .where(
-          `ST_Distance_Sphere(POINT(${latlngs[0]}, ${latlngs[1]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 1000`,
+          `ST_Distance_Sphere(POINT(${latlngs[1]}, ${latlngs[0]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 5000`,
         )
         .andWhere('JSON_CONTAINS(pictbl.category, :category)', {
           category: `"${category}"`,
         })
         .groupBy('id')
         .getRawMany();
+      Logger.log('카테고리 + 위경도');
       return data;
       // 카테고리 없이 위도경도만 사용
-    } else if (category == null && latlngs != null) {
+    } else if (category == null) {
+      Logger.log(latlngs[0]);
+      Logger.log(latlngs[1]);
       const data = getRepository(Pictbl)
         .createQueryBuilder('pictbl')
         .innerJoin('pictbl.store', 'storetbl')
@@ -246,37 +248,15 @@ export class CakeStoreService {
         .addSelect('storetbl.latlng as latlng')
         .addSelect('JSON_ARRAYAGG(pictbl.url)', 'pictArray')
         .addSelect(
-          `ST_Distance_Sphere(POINT(${latlngs[0]}, ${latlngs[1]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
+          `ST_Distance_Sphere(POINT(${latlngs[1]} ,${latlngs[0]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'), JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
           'distance',
         )
         .where(
-          `ST_Distance_Sphere(POINT(${latlngs[0]}, ${latlngs[1]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 5000`,
+          `ST_Distance_Sphere(POINT(${latlngs[1]}, ${latlngs[0]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 5000`,
         )
         .groupBy('id')
         .getRawMany();
-      return data;
-    } else if (latlngs == null && category != null) {
-      const data = getRepository(Pictbl)
-        .createQueryBuilder('pictbl')
-        .innerJoin('pictbl.store', 'storetbl')
-        .select('storetbl.id as id')
-        .addSelect('storetbl.name as name')
-        .addSelect('storetbl.address as address')
-        .addSelect('storetbl.tel as tel')
-        .addSelect('storetbl.url as url')
-        .addSelect('storetbl.opened as opened')
-        .addSelect('storetbl.closed as closed')
-        // 혹시몰라서 조회수 공유수도 ===
-        .addSelect('storetbl.views as views')
-        .addSelect('storetbl.shares as shares')
-        // =======
-        .addSelect('storetbl.latlng as latlng')
-        .addSelect('JSON_ARRAYAGG(pictbl.url)', 'pictArray')
-        .where('JSON_CONTAINS(pictbl.category, :category)', {
-          category: `"${category}"`,
-        })
-        .groupBy('id')
-        .getRawMany();
+      Logger.log('위경도');
       return data;
     }
   }
