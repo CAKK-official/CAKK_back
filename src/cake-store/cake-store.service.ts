@@ -226,6 +226,7 @@ export class CakeStoreService {
         })
         .groupBy('id')
         .getRawMany();
+      Logger.log('카테고리 + 위경도');
       return data;
       // 카테고리 없이 위도경도만 사용
     } else if (category == null && latlngs != null) {
@@ -254,6 +255,7 @@ export class CakeStoreService {
         )
         .groupBy('id')
         .getRawMany();
+      Logger.log('위경도');
       return data;
     } else if (latlngs == null && category != null) {
       const data = getRepository(Pictbl)
@@ -277,6 +279,7 @@ export class CakeStoreService {
         })
         .groupBy('id')
         .getRawMany();
+      Logger.log('카테고리');
       return data;
     }
   }

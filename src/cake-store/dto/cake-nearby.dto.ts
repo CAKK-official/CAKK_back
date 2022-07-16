@@ -1,13 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class NearbyDTO {
+  @IsArray()
   @ApiProperty({
     description: '[경도 ,위도]',
-    example: '',
+    example: [],
     nullable: true,
   })
-  latlng: number[] | any;
+  latlng: number[];
 
   @IsString()
   @ApiProperty({

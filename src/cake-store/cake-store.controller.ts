@@ -62,9 +62,10 @@ export class CakeStoreController {
   @ApiTags('Map')
   @Post('/nearby')
   async nearby(@Body() data: NearbyDTO): Promise<any> {
-    if (data.latlng == '' && data.category != '') {
+    Logger.log(data);
+    if (data.latlng.length == 0 && data.category != '') {
       data.latlng = null;
-    } else if (data.category == '' && data.latlng != []) {
+    } else if (data.category == '' && data.latlng.length != 0) {
       data.category = null;
     }
 
