@@ -194,7 +194,9 @@ export class CakeStoreService {
   public async NearbyStore(latlngs: number[], category: string): Promise<any> {
     // 카테고리 + 위경도가 있을 때
     if (category != null) {
+      Logger.log('-----------호출정보--------------');
       Logger.log(latlngs[0]);
+      Logger.log(latlngs[1]);
       Logger.log(category);
       const data = getRepository(Pictbl)
         .createQueryBuilder('pictbl')
@@ -214,11 +216,11 @@ export class CakeStoreService {
         .addSelect('JSON_ARRAYAGG(pictbl.url)', 'pictArray')
         // .addSelect('JSON_ARRAYAGG(pictbl.category)', 'storeCategory')
         .addSelect(
-          `ST_Distance_Sphere(POINT(${latlngs[1]} ,${latlngs[0]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'), JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
+          `ST_Distance_Sphere(POINT(${latlngs[0]} ,${latlngs[1]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'), JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
           'distance',
         )
         .where(
-          `ST_Distance_Sphere(POINT(${latlngs[1]}, ${latlngs[0]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 5000`,
+          `ST_Distance_Sphere(POINT(${latlngs[0]}, ${latlngs[1]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 5000`,
         )
         .andWhere('JSON_CONTAINS(pictbl.category, :category)', {
           category: `"${category}"`,
@@ -229,8 +231,10 @@ export class CakeStoreService {
       return data;
       // 카테고리 없이 위도경도만 사용
     } else if (category == null) {
+      Logger.log('-----------호출정보--------------');
       Logger.log(latlngs[0]);
       Logger.log(latlngs[1]);
+      Logger.log(category);
       const data = getRepository(Pictbl)
         .createQueryBuilder('pictbl')
         .innerJoin('pictbl.store', 'storetbl')
@@ -248,11 +252,11 @@ export class CakeStoreService {
         .addSelect('storetbl.latlng as latlng')
         .addSelect('JSON_ARRAYAGG(pictbl.url)', 'pictArray')
         .addSelect(
-          `ST_Distance_Sphere(POINT(${latlngs[1]} ,${latlngs[0]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'), JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
+          `ST_Distance_Sphere(POINT(${latlngs[0]} ,${latlngs[1]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'), JSON_EXTRACT(storetbl.latlng, '$[0]')))`,
           'distance',
         )
         .where(
-          `ST_Distance_Sphere(POINT(${latlngs[1]}, ${latlngs[0]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 5000`,
+          `ST_Distance_Sphere(POINT(${latlngs[0]}, ${latlngs[1]}), POINT(JSON_EXTRACT(storetbl.latlng, '$[1]'),JSON_EXTRACT(storetbl.latlng, '$[0]'))) < 5000`,
         )
         .groupBy('id')
         .getRawMany();

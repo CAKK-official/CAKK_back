@@ -5,7 +5,7 @@ export class NearbyDTO {
   @IsNotEmpty()
   @ApiProperty({
     description: '[경도 ,위도]',
-    example: [37.5112439, 127.1091949],
+    example: [126.921957, 37.558957],
   })
   latlng: number[];
 
